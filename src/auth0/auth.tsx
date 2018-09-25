@@ -42,6 +42,10 @@ class Auth {
     }
   }
 
+  public getAccessToken() {
+    return localStorage.getItem('access_token')
+  }
+
   public logout() {
     // Clear access token and ID token from local storage
     localStorage.removeItem('access_token');
