@@ -1,19 +1,26 @@
 import * as React from 'react';
+import { Route, Switch } from 'react-router';
 import './App.css';
+import callback from './components/callback/callback';
+import DefaultGrid from './components/default-grid/default-grid';
+import EditAndCreateMeetings from './components/edit-and-create-meetings/edit-and-create-meetings';
+import NavBar from './components/navBar/navBar';
 
-import logo from './logo.svg';
+
+
 
 class App extends React.Component {
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div >
+        <NavBar/>
+        <div className="App">
+        <Switch> 
+            <Route exact={true} path="/" component={DefaultGrid} />
+            <Route exact={true} path="/createmeeting" component={EditAndCreateMeetings} />
+            <Route exact={true} path="/callback" component={callback} />
+          </Switch>
+        </div>
       </div>
     );
   }
