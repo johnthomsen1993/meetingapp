@@ -4,7 +4,6 @@
     "tslint-react",
     "tslint-config-prettier"
   ],
-  "rulesDirectory": ["tslint-plugin-prettier"],
   "linterOptions": {
     "exclude": [
       "config/**/*.js",

@@ -5,6 +5,7 @@ import callback from './components/callback/callback';
 import DefaultGrid from './components/default-grid/default-grid';
 import EditAndCreateMeetings from './components/edit-and-create-meetings/edit-and-create-meetings';
 import NavBar from './components/navBar/navBar';
+import Meetings from './components/Meetings/Meetings';
 
 
 
@@ -13,12 +14,13 @@ class App extends React.Component {
   public render() {
     return (
       <div >
-        <NavBar/>
+        <NavBar />
         <div className="App">
-        <Switch> 
+          <Switch>
             <Route exact={true} path="/" component={DefaultGrid} />
             <Route exact={true} path="/createmeeting" component={EditAndCreateMeetings} />
             <Route exact={true} path="/callback" component={callback} />
+            <Route exact={true} path="/meetings" component={Meetings} />
           </Switch>
         </div>
       </div>

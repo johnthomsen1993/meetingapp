@@ -1,5 +1,6 @@
-export interface IMetingStoreState{
-     date: Date;
-     topic: string;
-     participants: string[];
+import { Meeting } from "../../Models/meeting";
+
+export interface MeetingStoreState{
+     meeting: Meeting;
+     meetings: Meeting[];
 }

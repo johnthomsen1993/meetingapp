@@ -1,91 +1,111 @@
-import axios from "axios";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import auth0Client from "../../auth0/auth";
 import { Meeting } from "../../Models/meeting";
-import * as actions from "../../ReduxStore/Actions/simpleAction"
-import { IMetingStoreState } from "../../ReduxStore/types/meeting";
-
-export interface IMeetingProps {
-  date: Date;
-  disabled: false;
-  topic: string;
-  onDateChanged?: (e: React.FormEvent<HTMLInputElement>) => void;
-  onTopicChanged?: (e: React.FormEvent<HTMLInputElement>) => void;
-}
-
-export function mapStateToProps({ topic, date }: IMetingStoreState) {
+import * as actions from "../../ReduxStore/Actions/simpleAction";
+import ParticipantList from "../Lists/participantList";
+export function mapStateToProps() {
   return {
-    date,
-    topic,
-  }
+  };
 }
 
 export function mapDispatchToProps(dispatch: Dispatch<actions.MeetingActions>) {
   return {
-    onDateChanged: () => dispatch(actions.changeMeetingDate()),
-    onTopicChanged: () => dispatch(actions.changeMeetingTopic()),
-  }
+    onDateChanged: (date: React.FormEvent<HTMLInputElement>) =>
+      dispatch(actions.changeMeetingDate(date)),
+      onSubmit: (meeting: Meeting) => dispatch(actions.CreateNewMeeting(meeting))
+  };
+}
+type MeetingProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+
+interface state{
+  topic: string;
+  date: string;
+  participant: string;
+  participants: string[];
 }
 
+class EditAndCreateMeetings extends React.Component<MeetingProps,state> {
 
-class EditAndCreateMeetings extends React.Component<IMeetingProps, any> {
-  constructor(props: IMeetingProps) {
+
+  constructor(props: MeetingProps) {
     super(props);
-    this.update = this.update.bind(this)
-    this.submit = this.submit.bind(this)
+    this.state = {
+      topic: "s",
+      date: "",
+      participant: "",
+      participants: []
+    };
   }
-
-  public update = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({
-      [e.currentTarget.name]: e.currentTarget.value
-    });
+  public addPatricipant = () => {
+    if (this.state.participant !== "") {
+      this.setState({
+        participants: [...this.state.participants, this.state.participant],
+        participant: ""
+      });
+    }
   };
+
   public submit() {
     const meeting: Meeting = {
       date: new Date(this.state.date),
-      participants: [],
+      participants: this.state.participants,
       topic: this.state.topic
     };
-    axios.post("http://localhost:53775/api/meeting", meeting, {
-      headers: { Authorization: `Bearer ${auth0Client.getAccessToken()}` }
-    });
+    if (this.props.onSubmit !== undefined) {
+      this.props.onSubmit(meeting);
+    }
   }
   public render() {
-    const topic = this.props.topic;
     return (
       <div>
         <div>New meeting</div>
         <div>
           <div>
             <label>Topic:</label>
-            <div >
-               Hello {topic}
-            </div>
             <input
-              disabled={this.state.disabled}
               type="text"
               name="topic"
+              value={this.state.topic}
               placeholder="Give your meeting a title."
-              onChange={this.props.onTopicChanged}
-
+              onChange={e =>
+                this.setState({ topic: e.currentTarget.value })
+              }
             />
           </div>
           <div>
             <label>Date:</label>
             <input
-              disabled={this.state.disabled}
               type="date"
               name="date"
-              onChange={this.props.onDateChanged}
+              onChange={e =>
+                this.setState({ date: e.currentTarget.value })
+              }
             />
           </div>
+          <div>
+            <label>participant:</label>
+            <input
+              type="text"
+              name="participant"
+              value={this.state.participant}
+              onChange={e =>
+                this.setState({ participant: e.currentTarget.value })
+              }
+            />
+            <button
+              className="btn btn-primary"
+              onClick={e=>this.addPatricipant()}
+            >
+              add
+            </button>
+          </div>
+          <div>
+            <ParticipantList entries={this.state.participants} />
+          </div>
           <button
-            disabled={this.state.disabled}
             className="btn btn-primary"
-            onClick={this.submit}
-          >
+            onClick={e => this.submit()}>
             Submit
           </button>
         </div>
@@ -93,4 +113,8 @@ class EditAndCreateMeetings extends React.Component<IMeetingProps, any> {
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps) (EditAndCreateMeetings);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditAndCreateMeetings);

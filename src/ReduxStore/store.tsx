@@ -1,13 +1,15 @@
 import {  createStore } from 'redux';
-import { MeetingActions } from './Actions/simpleAction';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducer } from './Reducers/simpleReducer';
-import { IMetingStoreState } from './types/meeting';
-
+import { MeetingStoreState } from './types/meeting';
+import { MeetingActions } from './Actions/simpleAction';
+import { Meeting } from '../Models/meeting';
 export default function configureStore() {
- return createStore<IMetingStoreState,MeetingActions,any,any>(
+ // tslint:disable-next-line:no-any
+ return createStore<MeetingStoreState,MeetingActions,any,any>(
   reducer,{
-      date:new Date(),
-      topic:'',
-  }
+      meeting:new Meeting,
+      meetings:[]
+  },composeWithDevTools()
  );
 }

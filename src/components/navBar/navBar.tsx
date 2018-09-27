@@ -24,13 +24,14 @@ const Linky = styled(Link)`
 `;
 
 
-class NavBar extends React.Component<any> {
+class NavBar extends React.Component {
 
   public render() {
     return (
       <SideBar>
         <Linky to="/">Menu</Linky>
         <Linky to="/createmeeting"> Create meeting</Linky>
+        <Linky to="/meetings"> Meetings</Linky>
         {!auth0Client.isAuthenticated() && (
           <button onClick={auth0Client.login}>Sign In</button>
         )}
